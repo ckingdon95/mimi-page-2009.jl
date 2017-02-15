@@ -13,7 +13,6 @@ function comparesampled(func::Function, filepath::AbstractString, eps::Float64=1
     recorded = readtable(filepath, header=false)
     for ii in 1:nrow(recorded)
         estimate = func(recorded[ii, 1])
-        println([estimate recorded[ii, 2]])
-        #@test_approx_eq_eps estimate recorded[ii, 2] eps
+        @test_approx_eq_eps estimate recorded[ii, 2] eps
     end
 end
