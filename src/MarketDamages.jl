@@ -1,3 +1,4 @@
+include("impactlib.jl")
 
 @defcomp MarketDamages begin
     region = Index(region)
@@ -50,8 +51,7 @@ function run_timestep(s::MarketDamages, t::Int64)
             v.i_regionalimpact[t,r] = p.rt_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r]
         end
 
-        v.iref_ImpactatReferenceGDPperCap[t,r]= p.WINCF_weightsfactor[r]*((p.W_MarketImpactsatCalibrationTemp + p.iben_MarketInitialBenefit * p.tcal_CalibrationTemp)*
-            (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.pow_MarketImpactExponent - v.i_regionalimpact[t,r] * p.iben_MarketInitialBenefit)
+        v.iref_ImpactatReferenceGDPperCap[t,r]= p.WINCF_weightsfactor[r]*impactfunction(v.i_regionalimpact[t,r], p.W_MarketImpactsatCalibrationTemp, p.iben_MarketInitialBenefit, p.tcal_CalibrationTemp, p.pow_MarketImpactExponent)
 
         v.igdp_ImpactatActualGDPperCap[t,r]= v.iref_ImpactatReferenceGDPperCap[t,r]*
             (p.rgdp_per_cap_SLRRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_MarketIncomeFxnExponent

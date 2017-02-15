@@ -1,5 +1,7 @@
 using DataFrames
 
+include("impactlib.jl")
+
 @defcomp NonMarketDamages begin
     region = Index(region)
 
@@ -53,9 +55,7 @@ function run_timestep(s::NonMarketDamages, t::Int64)
             v.i_regionalimpact[t,r] = p.rt_realizedtemperature[t,r]-p.atl_adjustedtolerableleveloftemprise[t,r]
         end
 
-        v.iref_ImpactatReferenceGDPperCap[t,r]= p.wincf_weightsfactor[r]*
-            ((p.w_NonImpactsatCalibrationTemp + p.iben_NonMarketInitialBenefit *p.tcal_CalibrationTemp)*
-                (v.i_regionalimpact[t,r]/p.tcal_CalibrationTemp)^p.pow_NonMarketExponent - v.i_regionalimpact[t,r] * p.iben_NonMarketInitialBenefit)
+        v.iref_ImpactatReferenceGDPperCap[t,r]= p.wincf_weightsfactor[r]*impactfunction(v.i_regionalimpact[t,r], p.w_NonImpactsatCalibrationTemp, p.iben_NonMarketInitialBenefit, p.tcal_CalibrationTemp, p.pow_NonMarketExponent)
 
         v.igdp_ImpactatActualGDPperCap[t,r]= v.iref_ImpactatReferenceGDPperCap[t,r]*
             (p.rgdp_per_cap_MarketRemainGDP[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_NonMarketIncomeFxnExponent

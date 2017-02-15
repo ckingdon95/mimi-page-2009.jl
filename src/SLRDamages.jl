@@ -1,5 +1,6 @@
 using Mimi
 include("load_parameters.jl")
+include("impactlib.jl")
 
 @defcomp SLRDamages begin
     region = Index()
@@ -60,8 +61,7 @@ function run_timestep(s::SLRDamages, t::Int64)
             v.i_regionalimpactSLR[t,r] = p.s_sealevel[t]-p.atl_adjustedtolerablelevelofsealevelrise[t,r]
         end
 
-        v.iref_ImpactatReferenceGDPperCapSLR[t,r]= p.WINCF_weightsfactor[r]*((p.W_SatCalibrationSLR + p.iben_SLRInitialBenefit * p.scal_calibrationSLR)*
-            (v.i_regionalimpactSLR[t,r]/p.scal_calibrationSLR)^p.pow_SLRImpactFxnExponent - v.i_regionalimpactSLR[t,r] * p.iben_SLRInitialBenefit)
+        v.iref_ImpactatReferenceGDPperCapSLR[t,r]= p.WINCF_weightsfactor[r]*impactfunction(v.i_regionalimpactSLR[t,r], p.W_SatCalibrationSLR, p.iben_SLRInitialBenefit, p.scal_calibrationSLR, p.pow_SLRImpactFxnExponent)
 
         v.igdp_ImpactatActualGDPperCapSLR[t,r]= v.iref_ImpactatReferenceGDPperCapSLR[t,r]*
                 (v.gdp_percap_aftercosts[t,r]/p.GDP_per_cap_focus_0_FocusRegionEU)^p.ipow_SLRIncomeFxnExponent
