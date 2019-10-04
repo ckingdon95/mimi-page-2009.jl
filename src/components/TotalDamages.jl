@@ -9,7 +9,7 @@
     discontinuity_damages_percap    = Parameter(index = [time, region], unit = "\$/person") # Discontinuity damages per capita 
 
     # other parameters 
-    population = Parameter(index = [time, region], unit = "million person")
+    pop_population = Parameter(index = [time, region], unit = "million person")
 
     # Undiscounted damages to calculate
     total_damages_percap    = Variable(index = [time, region], unit = "\$/person")  # Undiscounted total damages per capita     TODO: are these the units we want?
@@ -17,14 +17,14 @@
 
     function run_timestep(p, v, d, t)
         v.total_damages_percap[t, :] =
-            p.abatement_costs_percap[t, :] +
-            p.adaptation_costs_percap[t, :] +
+            # p.abatement_costs_percap[t, :] +
+            # p.adaptation_costs_percap[t, :] +
             p.slr_damages_percap[t, :] +
             p.market_damages_percap[t, :] +
             p.non_market_damages_percap[t, :] +
             p.discontinuity_damages_percap[t, :]
         
-        v.total_damages[t, :] = v.total_damages_percap[t, :] .* p.population[t, :]
+        v.total_damages[t, :] = v.total_damages_percap[t, :] .* p.pop_population[t, :]
     end
 end
 

@@ -197,7 +197,7 @@ function buildpage(m::Model, policy::String="policy-a")
     connect_param!(m, :Discontinuity => :rcons_per_cap_NonMarketRemainConsumption, :NonMarketDamages => :rcons_per_cap_NonMarketRemainConsumption)
     connect_param!(m, :Discontinuity => :isatg_saturationmodification, :GDP => :isatg_impactfxnsaturation)
 
-    connect_param!(m, :TotalDamages => :population, :Population => :pop_population)
+    connect_param!(m, :TotalDamages => :pop_population, :Population => :pop_population)
     connect_param!(m, :TotalDamages => :abatement_costs_percap, :TotalAbatementCosts => :tct_per_cap_totalcostspercap) 
     connect_param!(m, :TotalDamages => :adaptation_costs_percap, :TotalAdaptationCosts => :act_percap_adaptationcosts)
     connect_param!(m, :TotalDamages => :slr_damages_percap, :SLRDamages => :isat_per_cap_SLRImpactperCapinclSaturationandAdaptation)
